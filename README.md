@@ -155,9 +155,48 @@ CREATE DATABASE catalog;
 \q
 ```
 
+* logout postgres user:
 
-12. Install git.
+
+```
+exit
+```
+
+12. Install git
+
+```
+sudo apt-get install git
+```
 
 ## Deploy the Item Catalog project.
+
+
 13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
+
+* Create and change permissions on project folders:
+
+```
+cd /var/www
+sudo mkdir categories
+sudo chown grader categories
+```
+
+* Clone repository:
+
+```
+git clone https://github.com/treadwell/categories.git
+```
+
+* Install application dependencies:
+
+```
+sudo apt install python-pip
+pip install psycopg2
+pip install flask
+pip install sqlalchemy
+pip install oauth2client
+pip install requests
+```
+
+
 14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
