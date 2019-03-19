@@ -24,9 +24,16 @@ This project describes the steps to set up and configure a remote to host web ap
 * Restart the server: `sudo service ssh restart` ** Do not logout as root to make sure it works first** 
 * In a separate terminal, check configuration by logging in on the new port: `ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS -p 2200`
 
-
 5. Configure the Uncomplicated Firewall (UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123).
 
+`sudo ufw status`
+`sudo ufw default deny incoming`
+`sudo ufw default allow outgoing`
+`sudo ufw allow 2200/tcp`
+`sudo ufw allow ntp`
+`sudo ufw allow www`
+`sudo ufw enable`
+`sudo ufw status`
 
 ## Give `grader` access.
 
