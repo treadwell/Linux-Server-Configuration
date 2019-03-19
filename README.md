@@ -8,32 +8,33 @@ This project describes the steps to set up and configure a remote to host web ap
 
 2. Log into server:
 
-`ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS`
+```ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS```
 
 ## Secure the server
 3. Update all currently installed packages.
 
-`sudo apt-get update`
-`sudo apt-get upgrade`
+```sudo apt-get update
+sudo apt-get upgrade```
 
 
 4. Change the SSH port from 22 to 2200: 
 
 * Configure the Lightsail firewall to allow SSH connections on port 2200 on the Network tab of the instance management page.
 * Edit `/etc/ssh/sshd_config` to change the SSH port
-* Restart the server: `sudo service ssh restart` ** Do not logout as root to make sure it works first** 
-* In a separate terminal, check configuration by logging in on the new port: `ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS -p 2200`
+* Restart the server: `sudo service ssh restart` NB: Do not logout as root to make sure it works first!
+* In a separate terminal, check configuration by logging in on the new port: 
+```ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS -p 2200```
 
 5. Configure the Uncomplicated Firewall (UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123).
 
-`sudo ufw status`
-`sudo ufw default deny incoming`
-`sudo ufw default allow outgoing`
-`sudo ufw allow 2200/tcp`
-`sudo ufw allow ntp`
-`sudo ufw allow www`
-`sudo ufw enable`
-`sudo ufw status`
+```sudo ufw status
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 2200/tcp
+sudo ufw allow ntp
+sudo ufw allow www
+sudo ufw enable
+sudo ufw status```
 
 ## Give `grader` access.
 
