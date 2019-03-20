@@ -197,15 +197,16 @@ git clone https://github.com/treadwell/categories.git
 
 ```
 sudo apt install python-pip
-pip install psycopg2
-pip install flask
-pip install sqlalchemy
-pip install oauth2client
-pip install requests
+sudo apt-get install python-flask
+sudo apt-get install python-sqlalchemy
+sudo apt-get install python-psycopg2
+sudo apt-get install python-oauth2client
+sudo apt-get install python-requests
+
 ```
 
 
-14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
+14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. 
 
 * Validate apache2 install by accessing `http://http://54.208.34.181/` via web browser.  The Apache2 Ubuntu Default Page should be displayed.
 * Configure Demo WSGI app by editing the `/etc/apache2/sites-enabled/000-default.conf` file and adding `WSGIScriptAlias / /var/www/html/myapp.wsgi` just before the closing `</VirtualHost>` tag.
@@ -219,10 +220,32 @@ def application(environ, start_response):
     return [output]
 ```
 * Restart the apache2 service: `sudo service apache2 restart`
+
 * Validate the wsgi install by accessing `http://http://54.208.34.181/` via web browser.  "Hello World!" should be displayed.
 
+* Configure a WSGI entry point for the catalog app by editing the `/etc/apache2/sites-enabled/000-default.conf` file and changing `WSGIScriptAlias / /var/www/html/myapp.wsgi` to `WSGIScriptAlias / /var/www/categories/myCatalogApp.wsgi` just before the closing `</VirtualHost>` tag.
 
+* Create the file `/var/www/categories/myCatalogApp.wsgi` containing:
+```
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0,"/var/www/categories")
+from application import app as application
+application.secret_key = 'super_secret_key'
 ```
 
+Note that the `app` referred to above is the name of the flask app in `application.py`
 
-```
+* Restart the apache2 service: `sudo service apache2 restart`
+
+* Copy `client_secrets.json` to `/var/www/categories/`
+
+* In `application.py` change path to `client_secrets.json` to  `/var/www/categories/client_secrets.json` in two places
+
+* Update database engine string in `database_setup.py` and `application.py` to `postgresql://catalog:catalog@localhost/catalog`
+
+* Update OAUTH for target domain
+
+* Make sure that your .git directory is not publicly accessible via a browser!
