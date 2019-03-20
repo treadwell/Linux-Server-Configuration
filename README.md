@@ -162,6 +162,12 @@ CREATE DATABASE catalog;
 exit
 ```
 
+* Verify that remote connections are not allowed:
+
+```
+sudo cat /etc/postgresql/10/main/pg_hba.conf
+```
+
 12. Install git
 
 ```
@@ -200,3 +206,23 @@ pip install requests
 
 
 14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. Make sure that your .git directory is not publicly accessible via a browser!
+
+* Validate apache2 install by accessing `http://http://54.208.34.181/` via web browser.  The Apache2 Ubuntu Default Page should be displayed.
+* Configure Demo WSGI app by editing the `/etc/apache2/sites-enabled/000-default.conf` file and adding `WSGIScriptAlias / /var/www/html/myapp.wsgi` just before the closing `</VirtualHost>` tag.
+* Create the file `/var/www/html/myapp.wsgi` containing:
+```
+def application(environ, start_response):     
+    status = '200 OK'     
+    output = 'Hello World!'      
+    response_headers = [('Content-type', 'text/plain'), ('Content-Length', str(len(output)))]     
+    start_response(status, response_headers)      
+    return [output]
+```
+* Restart the apache2 service: `sudo service apache2 restart`
+* Validate the wsgi install by accessing `http://http://54.208.34.181/` via web browser.  "Hello World!" should be displayed.
+
+
+```
+
+
+```
