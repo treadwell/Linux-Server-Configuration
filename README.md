@@ -3,6 +3,7 @@
 This project describes the steps to set up and configure a remote AWS Lightsail server to host web applications.
 
 Server address: http://54.208.34.181.xip.io
+SSH port: 2200
 
 ## Software installed:
 
