@@ -1,6 +1,6 @@
 # Project: Linux Server Configuration
 
-This project describes the steps to set up and configure a remote to host web applications.
+This project describes the steps to set up and configure a remote AWS Lightsail server to host web applications.
 
 ## Initial configuration
 
@@ -130,36 +130,39 @@ sudo apt-get install postgresql
 
 ```
 
-* Change to postgres user:
+* Create a new database user named `catalog` with limited permissions to the database
+* Connect to database as the user postgres: `sudo su - postgres`
+* Type `psql` to enter postgres shell
+* Create a new user 
+`CREATE USER catalog WITH PASSWORD 'password';`
+* Confirm that the user was created: `\du` and to verify current permissions.
 
-```sudo -i -u postgres```
-
-* Create new dasabase user `catalog`:
-
+* Limit permissions to new database user, `catalog`
 ```
-createuser --interactive -P
-
-Enter name of role to add: catalog
-Enter password for new role:
-Enter it again:
-Shall the new role be a superuser? (y/n) n
-Shall the new role be allowed to create databases? (y/n) n
-Shall the new role be allowed to create more new roles? (y/n) n
+ALTER ROLE catalog WITH LOGIN;
+ALTER USER catalog CREATEDB;
 ```
-
-* Create new database `catalog`:
-
+* Create the database 
 ```
-psql
-CREATE DATABASE catalog;
+CREATE DATABASE catalog WITH OWNER catalog;
+```
+* Login to the database 
+```
+\c catalog
+```
+* Revoke all public rights and grant access to only the catalog user:
+```
+REVOKE ALL ON SCHEMA public FROM public;
+GRANT ALL ON SCHEMA public TO catalog;
+```
+* Exit the postgres shell and the postgres user 
+```
 \q
-```
-
-* logout postgres user:
-
-
-```
 exit
+```
+* Restart postgres
+```
+sudo service postgresql restart
 ```
 
 * Verify that remote connections are not allowed:
@@ -177,7 +180,7 @@ sudo apt-get install git
 ## Deploy the Item Catalog project.
 
 
-13. Clone and setup your Item Catalog project from the Github repository you created earlier in this Nanodegree program.
+13. Clone and setup the Item Catalog project from the Github repository created earlier in the Nanodegree program.
 
 * Create and change permissions on project folders:
 
@@ -206,7 +209,7 @@ sudo apt-get install python-requests
 ```
 
 
-14. Set it up in your server so that it functions correctly when visiting your server’s IP address in a browser. 
+14. Set up the application on the server so that it functions correctly when visiting the server’s IP address in a browser. 
 
 * Validate apache2 install by accessing `http://http://54.208.34.181/` via web browser.  The Apache2 Ubuntu Default Page should be displayed.
 * Configure Demo WSGI app by editing the `/etc/apache2/sites-enabled/000-default.conf` file and adding `WSGIScriptAlias / /var/www/html/myapp.wsgi` just before the closing `</VirtualHost>` tag.
@@ -232,6 +235,7 @@ import sys
 import logging
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0,"/var/www/categories")
+
 from application import app as application
 application.secret_key = 'super_secret_key'
 ```
@@ -244,8 +248,23 @@ Note that the `app` referred to above is the name of the flask app in `applicati
 
 * In `application.py` change path to `client_secrets.json` to  `/var/www/categories/client_secrets.json` in two places
 
-* Update database engine string in `database_setup.py` and `application.py` to `postgresql://catalog:catalog@localhost/catalog`
+* Update database engine string in `database_setup.py` and `application.py` to `postgresql://catalog@localhost/catalog`
 
-* Update OAUTH for target domain
+* Update OAUTH for target domain:
+
+	* Go to `https://console.developers.google.com`
+	* Make sure that the Catalog app is selected
+	* Click on Credentials in the left-hand menu
+	* Add Authorized Domain: `http://54.208.34.181.xip.io`
+	* Update Authorized Javascript origins to `http://54.208.34.181.xip.io`
+	* Update Authorized redirect URIs to `http://54.208.34.181.xip.io/login` and `http://54.208.34.181.xip.io/gconnect`
+
+* Download updated JSON file & rename the file to 'client_secrets.json'
+
+* add JSON file to your project path example: `/var/www/catalog/<your project folder>`
+
+
+https://knowledge.udacity.com/questions/21110
+
 
 * Make sure that your .git directory is not publicly accessible via a browser!
