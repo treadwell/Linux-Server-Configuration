@@ -248,7 +248,7 @@ Note that the `app` referred to above is the name of the flask app in `applicati
 
 * In `application.py` change path to `client_secrets.json` to  `/var/www/categories/client_secrets.json` in two places
 
-* Update database engine string in `database_setup.py` and `application.py` to `postgresql://catalog@localhost/catalog`
+* Update database engine string in `database_setup.py` and `application.py` to `postgresql://catalog:password@localhost/catalog`
 
 * Update OAUTH for target domain:
 
