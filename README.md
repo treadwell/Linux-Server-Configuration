@@ -2,7 +2,31 @@
 
 This project describes the steps to set up and configure a remote AWS Lightsail server to host web applications.
 
-## Initial configuration
+Server address: http://54.208.34.181.xip.io
+
+## Software installed:
+
+* apache2
+* libapache2-mod-wsgi
+* postgreSQL
+* git
+* python-flask
+* python-sqlalchemy
+* python-psycopg2
+* python-oauth2client
+* python-requests
+
+## External references:
+
+* Google OAUTH modification: https://knowledge.udacity.com/questions/21110
+* Timezones in Linux: https://unix.stackexchange.com/questions/110522/timezone-setting-in-linux
+* PostgreSQL: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
+* PostgreSQL security: https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps
+* Flask: https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+
+## Server configuration
+
+### Initial configuration
 
 1. Start a new Ubuntu Linux server instance on Amazon Lightsail, `https://aws.amazon.com/lightsail/`: 
 * Sign up
@@ -17,7 +41,7 @@ Server IP address is: 54.208.34.181
 ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS
 ```
 
-## Secure the server
+### Secure the server
 3. Update all currently installed packages.
 
 ```
@@ -48,9 +72,9 @@ sudo ufw enable
 sudo ufw status
 ```
 
-## Give `grader` access.
+### Give `grader` access.
 
-6. Create a new user account named grader.
+6. Create a new user account named `grader`.
 
 ```
 sudo adduser grader
@@ -107,7 +131,7 @@ Restart the ssh service:
 
 ```sudo service ssh restart```
 
-## Prepare to deploy your project
+### Prepare to deploy your project
 9. Configure the local timezone to UTC.
 
 ```
@@ -177,7 +201,7 @@ sudo cat /etc/postgresql/10/main/pg_hba.conf
 sudo apt-get install git
 ```
 
-## Deploy the Item Catalog project.
+### Deploy the Item Catalog project.
 
 
 13. Clone and setup the Item Catalog project from the Github repository created earlier in the Nanodegree program.
@@ -263,8 +287,3 @@ Note that the `app` referred to above is the name of the flask app in `applicati
 
 * add JSON file to your project path example: `/var/www/catalog/<your project folder>`
 
-
-https://knowledge.udacity.com/questions/21110
-
-
-* Make sure that your .git directory is not publicly accessible via a browser!
