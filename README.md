@@ -24,6 +24,8 @@ SSH port: 2200
 * PostgreSQL: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
 * PostgreSQL security: https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps
 * Flask: https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+* SSH Daemon: https://www.digitalocean.com/community/tutorials/how-to-tune-your-ssh-daemon-configuration-on-a-linux-vps
+* Upgrading packages: https://serverfault.com/questions/265410/ubuntu-server-message-says-packages-can-be-updated-but-apt-get-does-not-update
 
 ## Server configuration
 
@@ -43,11 +45,12 @@ ssh -i ~/.ssh/rsa-key.pem ubuntu@AWS_IP_ADDRESS
 ```
 
 ### Secure the server
-3. Update all currently installed packages.
+3. Update all currently installed packages including distribution packages.
 
 ```
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get dist-upgrade
 ```
 
 4. Change the SSH port from 22 to 2200: 
@@ -127,6 +130,7 @@ A restart of the ssh service may be required:
 * Disable password-based login, forcing login via the key pair:
 
 Verify entry in the `/etc/ssh/sshd_config` file for PasswordAuthentication is 'no'.
+Change 'PermitRootLogin' to 'no'.
 
 Restart the ssh service: 
 
